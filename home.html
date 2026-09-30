@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>เมนูเครื่องดื่ม</h1>
+
+<div class="panel" style="margin-bottom:18px">
+  <div class="field" style="margin:0">
+    <label for="product-search">ค้นหาเครื่องดื่ม</label>
+    <input id="product-search" type="search" placeholder="พิมพ์ชื่อหรือประเภทเครื่องดื่ม..." autocomplete="off">
+  </div>
+</div>
+
+{% set products = [
+  {"name": "เอสเพรสโซ", "category": "กาแฟ", "size": "M", "price": 100, "prices": {"S": 80, "M": 100, "L": 120}, "picture": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ลาเต้", "category": "กาแฟ", "size": "M", "price": 110, "prices": {"S": 90, "M": 110, "L": 130}, "picture": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&w=800&q=80"},
+  {"name": "คาปูชิโน", "category": "กาแฟ", "size": "M", "price": 105, "prices": {"S": 85, "M": 105, "L": 125}, "picture": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ชานมไทย", "category": "นม", "size": "M", "price": 60, "prices": {"S": 50, "M": 60, "L": 70}, "picture": "https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ชามะนาวโซดา", "category": "ผลไม้", "size": "M", "price": 70, "prices": {"S": 60, "M": 70, "L": 80}, "picture": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80"},
+  {"name": "นมช็อกโกแลต", "category": "นม", "size": "M", "price": 70, "prices": {"S": 60, "M": 70, "L": 80}, "picture": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=800&q=80"},
+  {"name": "อเมริกาโน", "category": "กาแฟ", "prices": {"S": 75, "M": 95, "L": 115}, "picture": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80"},
+  {"name": "มอคค่า", "category": "กาแฟ", "prices": {"S": 95, "M": 115, "L": 135}, "picture": "/static/img/mocha.jpg"},
+  {"name": "คาราเมลมัคคิอาโต", "category": "กาแฟ", "prices": {"S": 105, "M": 125, "L": 145}, "picture": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=800&q=80"},
+  {"name": "กาแฟเย็น", "category": "กาแฟ", "prices": {"S": 80, "M": 100, "L": 120}, "picture": "/static/img/iced-coffee.png"},
+  {"name": "โกโก้เย็น", "category": "โกโก้", "prices": {"S": 65, "M": 75, "L": 85}, "picture": "/static/img/iced-cocoa.jpg"},
+  {"name": "โกโก้ร้อน", "category": "โกโก้", "prices": {"S": 55, "M": 65, "L": 75}, "picture": "https://images.unsplash.com/photo-1517578239113-b03992dcdd25?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ชาเขียวมัทฉะ", "category": "ชา", "prices": {"S": 70, "M": 85, "L": 100}, "picture": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ชาเขียวมะนาว", "category": "ชา", "prices": {"S": 60, "M": 70, "L": 80}, "picture": "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80"},
+  {"name": "ชาดำเย็น", "category": "ชา", "prices": {"S": 50, "M": 60, "L": 70}, "picture": "/static/img/black-tea.jpg"},
+  {"name": "ชาพีช", "category": "ชา", "prices": {"S": 65, "M": 75, "L": 85}, "picture": "/static/img/peach-tea.webp"},
+  {"name": "ชาสตรอว์เบอร์รี", "category": "ชา", "prices": {"S": 65, "M": 75, "L": 85}, "picture": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80"},
+  {"name": "นมสดเย็น", "category": "นม", "prices": {"S": 50, "M": 60, "L": 70}, "picture": "https://images.unsplash.com/photo-1553787499-6f9133860278?auto=format&fit=crop&w=800&q=80"},
+  {"name": "นมสดคาราเมล", "category": "นม", "prices": {"S": 60, "M": 70, "L": 80}, "picture": "/static/img/caramel-milk.jpg"},
+  {"name": "นมชมพู", "category": "นม", "prices": {"S": 50, "M": 60, "L": 70}, "picture": "/static/img/pink-milk.webp"},
+  {"name": "นมเผือก", "category": "นม", "prices": {"S": 60, "M": 70, "L": 80}, "picture": "/static/img/taro-milk.webp"},
+  {"name": "นมกล้วย", "category": "นม", "prices": {"S": 60, "M": 70, "L": 80}, "picture": "/static/img/banana-milk.png"},
+  {"name": "สมูทตีสตรอว์เบอร์รี", "category": "สมูทตี", "prices": {"S": 80, "M": 95, "L": 110}, "picture": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=800&q=80"},
+  {"name": "สมูทตีมะม่วง", "category": "สมูทตี", "prices": {"S": 80, "M": 95, "L": 110}, "picture": "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?auto=format&fit=crop&w=800&q=80"},
+  {"name": "สมูทตีกล้วย", "category": "สมูทตี", "prices": {"S": 75, "M": 90, "L": 105}, "picture": "/static/img/banana-smoothie.png"}
+] %}
+
+<div class="card-grid">
+  {% for item in products %}
+  <a class="product-card" data-search="{{ item.name }} {{ item.category }}" href="{{ url_for('page', name='page2') }}?i={{ loop.index0 }}" style="text-decoration:none; color:inherit;">
+    <article class="item-card">
+      <img src="{{ item.picture }}" alt="{{ item.name }}">
+      <div class="body">
+        <span class="badge">{{ item.category }}</span>
+        <h3>{{ item.name }}</h3>
+        <div class="muted">S {{ item.prices.S }} · M {{ item.prices.M }} · L {{ item.prices.L }} บาท</div>
+        <div class="price">เริ่มต้น {{ item.prices.S }} บาท</div>
+      </div>
+    </article>
+  </a>
+  {% endfor %}
+</div>
+<div id="no-results" class="empty" hidden>ไม่พบเครื่องดื่มที่ค้นหา</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const searchInput = document.getElementById("product-search");
+  const productCards = document.querySelectorAll(".product-card");
+  const noResults = document.getElementById("no-results");
+
+  searchInput.addEventListener("input", function () {
+    const keyword = searchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    productCards.forEach(function (card) {
+      const matches = card.dataset.search.toLowerCase().includes(keyword);
+      card.hidden = !matches;
+      if (matches) {
+        visibleCount = visibleCount + 1;
+      }
+    });
+
+    noResults.hidden = visibleCount !== 0;
+  });
+</script>
+{% endblock %}

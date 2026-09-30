@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p class="lead">เลือกเครื่องดื่ม ระบุจำนวน และส่วนลด เพื่อดูราคาสุทธิ</p>
+
+<form method="get" class="panel" style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end">
+  <div class="field" style="margin:0"><label for="product">เครื่องดื่ม</label>
+    <select id="product" name="product">
+      {% for item in items %}<option value="{{ loop.index0 }}" {% if loop.index0 == product_index %}selected{% endif %}>{{ item.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field" style="margin:0"><label for="size">ขนาด</label>
+    <select id="size" name="size">
+      {% for drink_size, price in product.prices.items() %}<option value="{{ drink_size }}" {% if drink_size == size %}selected{% endif %}>{{ drink_size }} ({{ "{:,.2f}".format(price) }} บาท)</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field" style="margin:0"><label for="quantity">จำนวน (ชิ้น)</label><input id="quantity" name="quantity" value="{{ quantity }}" min="1" inputmode="numeric"></div>
+  <div class="field" style="margin:0"><label for="discount">ส่วนลด (%)</label><input id="discount" name="discount" value="{{ discount }}" min="0" max="100" inputmode="decimal"></div>
+  <button class="btn" type="submit">คำนวณ</button>
+</form>
+
+<div class="stat-grid" style="margin-top:16px">
+  <div class="stat"><div class="label">ราคาสินค้า</div><div class="value">{{ "{:,.2f}".format(product.price) }} บาท</div></div>
+  <div class="stat gold"><div class="label">รวมหลังหักส่วนลด</div><div class="value">{{ "{:,.2f}".format(after_discount) }} บาท</div></div>
+  <div class="stat good"><div class="label">ยอดสุทธิ</div><div class="value">{{ "{:,.2f}".format(total) }} บาท</div></div>
+</div>
+
+<h2>รายละเอียดราคา</h2>
+<table>
+  <tr><th>รายการ</th><th class="num">จำนวนเงิน</th></tr>
+  <tr><td>{{ product.name }} x {{ quantity }} ชิ้น</td><td class="num">{{ "{:,.2f}".format(subtotal) }} บาท</td></tr>
+  <tr><td>ส่วนลด {{ "{:,.2f}".format(discount) }}%</td><td class="num">- {{ "{:,.2f}".format(discount_amount) }} บาท</td></tr>
+  <tr><th>ยอดสุทธิ</th><th class="num">{{ "{:,.2f}".format(total) }} บาท</th></tr>
+</table>
+{% endblock %}

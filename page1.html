@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>เมนูเครื่องดื่ม</h1>
+<p class="lead">ทั้งหมด {{ count }} รายการ</p>
+
+{% if items %}
+<table>
+  <tr>
+    <th>#</th><th>ชื่อเครื่องดื่ม</th><th>ประเภท</th><th>ราคา S</th><th>ราคา M</th><th>ราคา L</th>
+  </tr>
+  {% for category, category_items in items|groupby("category") %}
+  <tr class="category-row"><th colspan="6">{{ category }}</th></tr>
+  {% for item in category_items|sort(attribute="price", reverse=true) %}
+  <tr>
+    <td>{{ item.no }}</td>
+    <td>{{ item.name }}</td>
+    <td>{{ item.category }}</td>
+    <td class="num">{{ "{:,.0f}".format(item.prices.S) }}</td>
+    <td class="num">{{ "{:,.0f}".format(item.prices.M) }}</td>
+    <td class="num">{{ "{:,.0f}".format(item.prices.L) }}</td>
+  </tr>
+  {% endfor %}
+  {% endfor %}
+</table>
+{% else %}
+<div class="empty">ยังไม่มีเมนูเครื่องดื่มใน data.json</div>
+{% endif %}
+{% endblock %}

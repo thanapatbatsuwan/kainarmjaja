@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+{% if list_mode %}
+<div class="page2-shell">
+<div class="page2-intro">
+  <span class="page2-kicker">จากสวนและเมล็ดกาแฟ</span>
+  <h1>รายการเครื่องดื่ม</h1>
+  <p class="lead">เลือกเมนูโปรดจากวัตถุดิบธรรมชาติ แยกหมวดหมู่ให้เลือกง่าย</p>
+</div>
+{% for category, category_items in items|groupby("category") %}
+<h2 class="category-heading"><span class="category-mark"></span>{{ category }}</h2>
+<div class="card-grid">
+  {% for product in category_items %}
+  <a class="product-card nature-product-card" href="?i={{ items.index(product) }}">
+    <article class="item-card nature-item-card">
+      <div class="body">
+        <span class="badge">{{ product.category }}</span>
+        <h3>{{ product.name }}</h3>
+        <div class="muted">S {{ product.prices.S }} · M {{ product.prices.M }} · L {{ product.prices.L }} บาท</div>
+        <div class="price">เริ่มต้น {{ product.prices.S }} บาท</div>
+      </div>
+    </article>
+  </a>
+  {% endfor %}
+</div>
+{% endfor %}
+</div>
+{% elif item %}
+<div class="page2-shell page2-detail-shell">
+<div class="product-detail">
+  <div class="product-detail-image">
+    {% if picture.startswith('http') or picture.startswith('/static/') %}
+    <img src="{{ picture }}" alt="{{ item.name }}">
+    {% else %}
+    <img src="{{ url_for('static', filename='img/' + picture) }}" alt="{{ item.name }}">
+    {% endif %}
+  </div>
+  <div class="product-detail-info">
+    <span class="badge">{{ item.category }}</span>
+    <p class="product-position">เมนูที่ {{ index + 1 }} จาก {{ count }}</p>
+    <h1>{{ item.name }}</h1>
+    <p class="product-description">เครื่องดื่มรสชาติกลมกล่อม เลือกขนาดที่ต้องการแล้วดูราคาที่เหมาะกับคุณ</p>
+    <a class="selected-price product-price-link" href="{{ url_for('page', name='page3') }}?product={{ index }}&size={{ item.size }}&quantity=1">
+      <span>ราคาขนาด {{ item.size }}</span>
+      <strong>{{ "{:,.0f}".format(item.price) }} บาท</strong>
+    </a>
+    <div class="size-picker">
+      <h2>เลือกขนาด</h2>
+      <div class="size-options">
+        {% for drink_size, price in item.prices.items() %}
+        <a class="size-option {{ 'active' if drink_size == item.size }}" href="{{ url_for('page', name='page3') }}?product={{ index }}&size={{ drink_size }}&quantity=1">
+          <strong>{{ drink_size }}</strong><span>{{ "{:,.0f}".format(price) }} บาท</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="product-note">{{ sentence }}</p>
+  </div>
+</div>
+<div class="product-navigation">
+  {% if prev is not none %}<a class="btn ghost" href="?i={{ prev }}">← เมนูก่อนหน้า</a>{% else %}<span></span>{% endif %}
+  {% if next is not none %}<a class="btn" href="?i={{ next }}">เมนูถัดไป →</a>{% endif %}
+</div>
+</div>
+{% else %}
+<div class="empty">ยังไม่มีข้อมูลใน data.json</div>
+{% endif %}
+{% endblock %}
